@@ -28,7 +28,7 @@ const Login = () => {
     <div
       className="relative bg-fixed min-h-screen bg-cover bg-center overflow-auto flex items-center justify-center"
       style={{
-        backgroundImage: "url('https://i.ibb.co/com/q33RppLv/pexels-jeshoots-com-147458-714701.jpg')",
+        backgroundImage: "url('https://i.ibb.co.com/q33RppLv/pexels-jeshoots-com-147458-714701.jpg')",
       }}
     >
       <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
