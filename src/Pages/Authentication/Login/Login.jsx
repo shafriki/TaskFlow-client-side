@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../Hooks/useAuth";
+import { saveUser } from "../../../utils/utils";
 
 const Login = () => {
   const { signInWithGoogle, loading } = useAuth();
@@ -13,14 +14,18 @@ const Login = () => {
     AOS.init();
   }, []);
 
-  // Handle Google Signin
+  // Handle Google Sign-in
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const data = await signInWithGoogle();
+      
+      // Save user info in DB
+      await saveUser(data?.user);
+      
       navigate("/task");
-      alert("Login Successful");  
+      alert("Login Successful");
     } catch (err) {
-      alert(err?.message);  
+      alert(err?.message);
     }
   };
 
