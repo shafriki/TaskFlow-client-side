@@ -1,22 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../../Hooks/useAuth";
 
 const Login = () => {
+  const { signInWithGoogle, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     AOS.init();
   }, []);
 
+  // Handle Google Signin
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      navigate("/");
+      alert("Login Successful");  // You can use alert or other methods to notify the user
+    } catch (err) {
+      alert(err?.message);  // Handle error without toast
+    }
+  };
+
   return (
     <div
       className="relative bg-fixed min-h-screen bg-cover bg-center overflow-auto flex items-center justify-center"
       style={{
-        backgroundImage: "url('https://i.ibb.co.com/q33RppLv/pexels-jeshoots-com-147458-714701.jpg')",
+        backgroundImage: "url('https://i.ibb.co/com/q33RppLv/pexels-jeshoots-com-147458-714701.jpg')",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
 
       <div
@@ -34,14 +48,19 @@ const Login = () => {
         </div>
 
         <button
+          onClick={handleGoogleSignIn}
           type="button"
           className="w-full px-4 py-2 font-semibold text-white bg-[#0f162f] hover:bg-[#070A16] ease-in-out btn border-none rounded-md"
         >
-          <FcGoogle className="text-2xl" /> Login with Google
+          {loading ? (
+            <div className="loader">Loading...</div>  // You can replace this with a loading spinner like BeatLoader
+          ) : (
+            <FcGoogle className="text-2xl" /> 
+          )}
+          Login with Google
         </button>
 
-        <p className="text-sm text-center text-white mt-1">
-        </p>
+        <p className="text-sm text-center text-white mt-1"></p>
       </div>
     </div>
   );
