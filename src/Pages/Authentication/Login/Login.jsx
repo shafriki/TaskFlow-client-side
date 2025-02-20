@@ -17,7 +17,7 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigate("/");
+      navigate("/task");
       alert("Login Successful");  
     } catch (err) {
       alert(err?.message);  
