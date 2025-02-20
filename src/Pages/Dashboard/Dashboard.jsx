@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
     return (
         <div
-            className="hero min-h-screen"
+            className="hero bg-fixed min-h-screen"
             style={{
-                backgroundImage: "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
+                backgroundImage: "url(https://i.ibb.co.com/q33RppLv/pexels-jeshoots-com-147458-714701.jpg)",
             }}>
             <div className="hero-overlay bg-opacity-60"></div>
             <div className="hero-content text-neutral-content text-center">

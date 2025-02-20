@@ -18,9 +18,9 @@ const Login = () => {
     try {
       await signInWithGoogle();
       navigate("/");
-      alert("Login Successful");  // You can use alert or other methods to notify the user
+      alert("Login Successful");  
     } catch (err) {
-      alert(err?.message);  // Handle error without toast
+      alert(err?.message);  
     }
   };
 
