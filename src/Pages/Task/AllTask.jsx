@@ -17,6 +17,7 @@ const AllTask = () => {
         description: '',
         category: '',
         deadline: '',
+        email: '',
     });
 
     useEffect(() => {
@@ -61,8 +62,8 @@ const AllTask = () => {
     const handleDelete = async (taskId) => {
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`);
-            setTasks(tasks.filter(task => task._id !== taskId)); // Remove task without refreshing
-            setTodoTasks(todoTasks.filter(task => task._id !== taskId)); // Update To-Do list
+            setTasks(tasks.filter(task => task._id !== taskId));
+            setTodoTasks(todoTasks.filter(task => task._id !== taskId));
         } catch (error) {
             console.error('Error deleting task:', error);
         }
@@ -75,6 +76,7 @@ const AllTask = () => {
             description: task.description,
             category: task.category,
             deadline: task.deadline || '',
+            email: task.email || user?.email,
         });
         setShowModal(true);
     };
@@ -90,22 +92,15 @@ const AllTask = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Send PUT request to update task using the selectedTask ID and taskForm data
-            const updatedTask = await axios.post(`${import.meta.env.VITE_API_URL}/tasks/update`, {
-                taskId: selectedTask._id, // Pass the taskId
-                updatedTask: taskForm,    // Pass the updated task data
+            await axios.post(`${import.meta.env.VITE_API_URL}/tasks/update`, {
+                taskId: selectedTask._id,
+                updatedTask: taskForm,
             });
 
-            // Update the tasks and todoTasks state with the updated task
-            setTasks((prevTasks) => prevTasks.map(task =>
-                task._id === updatedTask.data._id ? updatedTask.data : task
-            ));
-            setTodoTasks((prevTasks) => prevTasks.map(task =>
-                task._id === updatedTask.data._id ? updatedTask.data : task
-            ));
-
-            // Close the modal after successful update
             setShowModal(false);
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         } catch (error) {
             console.error('Error updating task:', error);
         }
@@ -125,7 +120,6 @@ const AllTask = () => {
                             <p className="text-sm text-gray-500">Deadline: {task.deadline || 'N/A'}</p>
                             <p className="text-sm text-gray-500">Added by: {task.email}</p>
                         </div>
-                        {/* Edit Button */}
                         <div className="w-full flex justify-end space-x-4">
                             <button
                                 onClick={() => handleEdit(task)}
@@ -167,7 +161,6 @@ const AllTask = () => {
                 {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(tasks.filter(task => task.status === 'Done'), false)}
             </div>
 
-            {/* Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg w-1/3">
@@ -187,7 +180,8 @@ const AllTask = () => {
                             </div>
                             <div className="mb-4">
                                 <label htmlFor="description" className="block text-sm font-medium">Description</label>
-                                <textarea
+                                <input
+                                    type="text"
                                     id="description"
                                     name="description"
                                     value={taskForm.description}
@@ -211,7 +205,6 @@ const AllTask = () => {
                                     <option value="Done">Done</option>
                                 </select>
                             </div>
-
                             <div className="mb-4">
                                 <label htmlFor="deadline" className="block text-sm font-medium">Deadline</label>
                                 <input
@@ -223,20 +216,20 @@ const AllTask = () => {
                                     className="mt-1 p-2 w-full border border-gray-300 rounded-md"
                                 />
                             </div>
+                            <div className="mb-4">
+                                <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={taskForm.email || user?.email} // Fallback to the current user's email
+                                    disabled
+                                    className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-gray-100"
+                                />
+                            </div>
                             <div className="flex justify-end space-x-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(false)}
-                                    className="bg-gray-400 text-white px-4 py-2 rounded-md"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                                >
-                                    Save
-                                </button>
+                                <button type="button" onClick={() => { setShowModal(false); window.location.reload(); }} className="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+                                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
                             </div>
                         </form>
                     </div>
