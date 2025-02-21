@@ -9,6 +9,8 @@ const AllTask = () => {
     const { user } = useContext(AuthContext);
     const [tasks, setTasks] = useState([]);
     const [todoTasks, setTodoTasks] = useState([]);
+    const [inProgressTasks, setInProgressTasks] = useState([]);
+    const [doneTasks, setDoneTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedTask, setSelectedTask] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -45,13 +47,39 @@ const AllTask = () => {
             }
         };
 
+        const fetchInProgressTasks = async () => {
+            if (!user?.email) return;
+
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks/inprogress/${user.email}`);
+                setInProgressTasks(response.data);
+            } catch (error) {
+                console.error('Error fetching In Progress tasks:', error);
+            }
+        };
+
+        const fetchDoneTasks = async () => {
+            if (!user?.email) return;
+
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks/done/${user.email}`);
+                setDoneTasks(response.data);
+            } catch (error) {
+                console.error('Error fetching Done tasks:', error);
+            }
+        };
+
         fetchTasks();
         fetchTodoTasks();
+        fetchInProgressTasks();
+        fetchDoneTasks();
 
         // Listen for real-time task deletion
         socket.on('taskDeleted', (deletedTaskId) => {
             setTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
             setTodoTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
+            setInProgressTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
+            setDoneTasks((prevTasks) => prevTasks.filter(task => task._id !== deletedTaskId));
         });
 
         return () => {
@@ -64,6 +92,8 @@ const AllTask = () => {
             await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${taskId}`);
             setTasks(tasks.filter(task => task._id !== taskId));
             setTodoTasks(todoTasks.filter(task => task._id !== taskId));
+            setInProgressTasks(inProgressTasks.filter(task => task._id !== taskId));
+            setDoneTasks(doneTasks.filter(task => task._id !== taskId));
         } catch (error) {
             console.error('Error deleting task:', error);
         }
@@ -154,11 +184,11 @@ const AllTask = () => {
             </div>
             <div className="bg-white p-6 shadow-md rounded-lg">
                 <h2 className="text-xl font-bold mb-4 text-center">In Progress</h2>
-                {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(tasks.filter(task => task.status === 'In Progress'), false)}
+                {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(inProgressTasks, false)}
             </div>
             <div className="bg-white p-6 shadow-md rounded-lg">
                 <h2 className="text-xl font-bold mb-4 text-center">Done</h2>
-                {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(tasks.filter(task => task.status === 'Done'), false)}
+                {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(doneTasks, false)}
             </div>
 
             {showModal && (
