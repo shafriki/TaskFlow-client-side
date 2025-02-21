@@ -242,79 +242,80 @@ const AllTask = () => {
                 </div>
 
                 {showModal && (
-                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-                        <div className="bg-white p-6 rounded-lg w-1/3">
-                            <h3 className="text-xl font-bold mb-4">Edit Task</h3>
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-4">
-                                    <label htmlFor="title" className="block text-sm font-medium">Title</label>
-                                    <input
-                                        type="text"
-                                        id="title"
-                                        name="title"
-                                        value={taskForm.title}
-                                        onChange={handleChange}
-                                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="description" className="block text-sm font-medium">Description</label>
-                                    <input
-                                        type="text"
-                                        id="description"
-                                        name="description"
-                                        value={taskForm.description}
-                                        onChange={handleChange}
-                                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="category" className="block text-sm font-medium">Category</label>
-                                    <select
-                                        id="category"
-                                        name="category"
-                                        value={taskForm.category}
-                                        onChange={handleChange}
-                                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                                        required
-                                    >
-                                        <option value="To-Do">To-Do</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Done">Done</option>
-                                    </select>
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="deadline" className="block text-sm font-medium">Deadline</label>
-                                    <input
-                                        type="date"
-                                        id="deadline"
-                                        name="deadline"
-                                        value={taskForm.deadline}
-                                        onChange={handleChange}
-                                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label htmlFor="email" className="block text-sm font-medium">Email</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        value={taskForm.email || user?.email} // Fallback to the current user's email
-                                        disabled
-                                        className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-gray-100"
-                                    />
-                                </div>
-                                <div className="flex justify-end space-x-4">
-                                    <button type="button" onClick={() => { setShowModal(false); window.location.reload(); }} className="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
-                                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg w-full sm:w-4/5 md:w-1/3 lg:w-1/4">
+            <h3 className="text-xl font-bold mb-4">Edit Task</h3>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label htmlFor="title" className="block text-sm font-medium">Title</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={taskForm.title}
+                        onChange={handleChange}
+                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="description" className="block text-sm font-medium">Description</label>
+                    <input
+                        type="text"
+                        id="description"
+                        name="description"
+                        value={taskForm.description}
+                        onChange={handleChange}
+                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="category" className="block text-sm font-medium">Category</label>
+                    <select
+                        id="category"
+                        name="category"
+                        value={taskForm.category}
+                        onChange={handleChange}
+                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                        required
+                    >
+                        <option value="To-Do">To-Do</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="deadline" className="block text-sm font-medium">Deadline</label>
+                    <input
+                        type="date"
+                        id="deadline"
+                        name="deadline"
+                        value={taskForm.deadline}
+                        onChange={handleChange}
+                        className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={taskForm.email || user?.email} // Fallback to the current user's email
+                        disabled
+                        className="mt-1 p-2 w-full border border-gray-300 rounded-md bg-gray-100"
+                    />
+                </div>
+                <div className="flex justify-end space-x-4">
+                    <button type="button" onClick={() => { setShowModal(false); window.location.reload(); }} className="bg-gray-400 text-white px-4 py-2 rounded-md">Cancel</button>
+                    <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+)}
+
             </div>
         </DragDropContext>
     );
