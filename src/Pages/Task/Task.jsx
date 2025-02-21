@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import { AuthContext } from '../../providers/AuthProvider';
 
 const Task = () => {
@@ -20,6 +21,7 @@ const Task = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (!user?.email) {
             Swal.fire({
                 title: 'Error!',
@@ -39,29 +41,16 @@ const Task = () => {
                 timestamp: new Date().toISOString(),
             };
 
-            const response = await fetch('https://your-api-url.com/tasks', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newTask),
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/tasks`, newTask, {
+                headers: { 'Content-Type': 'application/json' },
             });
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (response.status === 200 || response.status === 201) {
                 setTask({ title: '', description: '', category: 'To-Do', deadline: '' });
                 Swal.fire({
                     title: 'Success!',
                     text: 'Task added successfully.',
                     icon: 'success',
-                    confirmButtonText: 'OK',
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: data?.message || 'Failed to add task.',
-                    icon: 'error',
                     confirmButtonText: 'OK',
                 });
             }
@@ -80,17 +69,21 @@ const Task = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 p-4 max-w-screen-xl mx-auto">
+            {/* Sidebar Links */}
             <div className="md:col-span-4 flex flex-col gap-5">
-                <Link className="btn bg-teal-100 py-6 w-full">All Tasks</Link>
-                <Link className="btn bg-teal-100 py-6 w-full">To-Do Tasks</Link>
-                <Link className="btn bg-teal-100 py-6 w-full">In Progress Tasks</Link>
-                <Link className="btn bg-teal-100 py-6 w-full">Completed Tasks</Link>
+                <Link to="/task" className="btn bg-teal-100 py-6 w-full">Add Tasks</Link>
+                <Link to="/alltasks" className="btn bg-teal-100 py-6 w-full">All Tasks</Link>
+                <Link to="/tasks/todo" className="btn bg-teal-100 py-6 w-full">To-Do Tasks</Link>
+                <Link to="/tasks/inprogress" className="btn bg-teal-100 py-6 w-full">In Progress Tasks</Link>
+                <Link to="/tasks/completed" className="btn bg-teal-100 py-6 w-full">Completed Tasks</Link>
             </div>
 
+            {/* Task Form */}
             <div className="md:col-span-8">
                 <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded-lg">
                     <h2 className="text-xl font-bold mb-4 text-center">Add New Task</h2>
 
+                    {/* Title */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Title</label>
                         <input 
@@ -104,6 +97,7 @@ const Task = () => {
                         />
                     </div>
 
+                    {/* Description */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Description</label>
                         <textarea 
@@ -115,6 +109,7 @@ const Task = () => {
                         ></textarea>
                     </div>
 
+                    {/* Category */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Category</label>
                         <select 
@@ -129,9 +124,10 @@ const Task = () => {
                         </select>
                     </div>
 
+                    {/* Deadline */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Deadline</label>
-                        <input 
+                        <input required 
                             type="date" 
                             name="deadline" 
                             value={task.deadline} 
@@ -140,6 +136,7 @@ const Task = () => {
                         />
                     </div>
 
+                    {/* User Email (Read-Only) */}
                     <div className="mb-4">
                         <label className="block text-gray-700">Email</label>
                         <input
@@ -153,6 +150,7 @@ const Task = () => {
                         />
                     </div>
 
+                    {/* Submit Button */}
                     <button 
                         type="submit" 
                         className="bg-blue-500 text-white px-4 py-2 rounded w-full"
