@@ -4,7 +4,8 @@ import { AuthContext } from '../../providers/AuthProvider';
 import { io } from 'socket.io-client';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const socket = io(import.meta.env.VITE_API_URL); // Connect to the server
+const socket = io(import.meta.env.VITE_API_URL); 
+
 
 const AllTask = () => {
     const { user } = useContext(AuthContext);

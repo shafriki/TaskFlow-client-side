@@ -5,6 +5,7 @@ import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../../Hooks/useAuth";
 import { saveUser } from "../../../utils/utils";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 const Login = () => {
   const { signInWithGoogle, loading } = useAuth();
@@ -23,9 +24,24 @@ const Login = () => {
       await saveUser(data?.user);
       
       navigate("/task");
-      alert("Login Successful");
+      
+      // Show SweetAlert2 popup
+      Swal.fire({
+        title: "Success!",
+        text: "Login Successful",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#0f162f", // Customize the button color
+      });
     } catch (err) {
-      alert(err?.message);
+      // Show SweetAlert2 error popup
+      Swal.fire({
+        title: "Error",
+        text: err?.message || "Something went wrong",
+        icon: "error",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#0f162f",
+      });
     }
   };
 
