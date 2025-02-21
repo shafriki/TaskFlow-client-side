@@ -41,7 +41,7 @@ const Navbar = () => {
                             {Links}
                         </ul>
                 </div>
-                <Link to='/' className="btn btn-ghost text-xl">TaskFlow</Link>
+                <h1 className="btn btn-ghost text-xl">TaskFlow</h1>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-5">
@@ -58,7 +58,7 @@ const Navbar = () => {
                                 </div>
                             </div>
                             <ul tabIndex={0} className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-40">
-                                <li><Link to='/profile' className="btn btn-ghost">Profile</Link></li>
+                                <li><p className="btn btn-ghost">Profile</p></li>
                                 <li><button onClick={handleLogout} className="btn btn-ghost">Logout</button></li>
                             </ul>
                         </div>
