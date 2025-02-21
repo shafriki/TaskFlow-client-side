@@ -68,18 +68,10 @@ const Task = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 p-4 max-w-screen-xl mx-auto">
-            {/* Sidebar Links */}
-            <div className="md:col-span-4 flex flex-col gap-5">
-                <Link to="/task" className="btn bg-teal-100 py-6 w-full">Add Tasks</Link>
-                <Link to="/alltasks" className="btn bg-teal-100 py-6 w-full">All Tasks</Link>
-                <Link to="/tasks/todo" className="btn bg-teal-100 py-6 w-full">To-Do Tasks</Link>
-                <Link to="/tasks/inprogress" className="btn bg-teal-100 py-6 w-full">In Progress Tasks</Link>
-                <Link to="/tasks/completed" className="btn bg-teal-100 py-6 w-full">Completed Tasks</Link>
-            </div>
+        <div className=" p-4 max-w-screen-xl mx-auto">
 
             {/* Task Form */}
-            <div className="md:col-span-8">
+            <div className="">
                 <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded-lg">
                     <h2 className="text-xl font-bold mb-4 text-center">Add New Task</h2>
 

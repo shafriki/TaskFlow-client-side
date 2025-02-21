@@ -1,11 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import avatarImg from '../../../../src/assets/avatar.png';
 import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
 
 const Navbar = () => {
     const { user, logOut } = useAuth();
+
+    const Links = <>
+    <NavLink to='/task' className={({ isActive }) => isActive ? 'font-bold text-[#1f5c59]' : 'text-[#251942]'}>Add Tasks</NavLink>
+
+    <NavLink to='/alltasks' className={({ isActive }) => isActive ? 'font-bold text-[#28726f]' : 'text-[#251942]'}>All Tasks</NavLink>
+
+    </>
 
     const handleLogout = () => {
         logOut();
@@ -28,16 +35,18 @@ const Navbar = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
                         </svg>
                     </div>
-                    <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        
-                    </ul>
+                    <ul
+                            tabIndex={0}
+                            className="menu bg-gradient-to-r from-[#070A16] via-[#070A16] to-[#070A16] menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                            {Links}
+                        </ul>
                 </div>
                 <Link to='/' className="btn btn-ghost text-xl">TaskFlow</Link>
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    
-                </ul>
+                <ul className="menu menu-horizontal px-1 gap-5">
+                        {Links}
+                    </ul>
             </div>
             <div className="navbar-end flex gap-2 items-center">
                 {user ? (
