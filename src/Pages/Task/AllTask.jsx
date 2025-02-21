@@ -10,6 +10,14 @@ const AllTask = () => {
     const [tasks, setTasks] = useState([]);
     const [todoTasks, setTodoTasks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedTask, setSelectedTask] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [taskForm, setTaskForm] = useState({
+        title: '',
+        description: '',
+        category: '',
+        deadline: '',
+    });
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -60,28 +68,80 @@ const AllTask = () => {
         }
     };
 
+    const handleEdit = (task) => {
+        setSelectedTask(task);
+        setTaskForm({
+            title: task.title,
+            description: task.description,
+            category: task.category,
+            deadline: task.deadline || '',
+        });
+        setShowModal(true);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setTaskForm((prevForm) => ({
+            ...prevForm,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // Send PUT request to update task using the selectedTask ID and taskForm data
+            const updatedTask = await axios.post(`${import.meta.env.VITE_API_URL}/tasks/update`, {
+                taskId: selectedTask._id, // Pass the taskId
+                updatedTask: taskForm,    // Pass the updated task data
+            });
+
+            // Update the tasks and todoTasks state with the updated task
+            setTasks((prevTasks) => prevTasks.map(task =>
+                task._id === updatedTask.data._id ? updatedTask.data : task
+            ));
+            setTodoTasks((prevTasks) => prevTasks.map(task =>
+                task._id === updatedTask.data._id ? updatedTask.data : task
+            ));
+
+            // Close the modal after successful update
+            setShowModal(false);
+        } catch (error) {
+            console.error('Error updating task:', error);
+        }
+    };
+
     const renderTasks = (taskList, showDeleteButton = true) => (
         taskList.length === 0 ? (
             <p className="text-center text-gray-500">No tasks available.</p>
         ) : (
             <ul className="space-y-4">
                 {taskList.map((task) => (
-                    <li key={task._id} className="p-4 border border-gray-300 rounded-lg flex justify-between items-center">
-                        <div className='flex flex-col w-3/5'>
+                    <li key={task._id} className="p-4 border border-gray-300 rounded-lg flex flex-col justify-between items-start">
+                        <div className='flex flex-col w-full mb-4'>
                             <h3 className="text-lg font-semibold">{task.title}</h3>
                             <p className="text-gray-700">{task.description}</p>
                             <p className="text-sm text-gray-500">Category: {task.category}</p>
                             <p className="text-sm text-gray-500">Deadline: {task.deadline || 'N/A'}</p>
                             <p className="text-sm text-gray-500">Added by: {task.email}</p>
                         </div>
-                        {showDeleteButton && (
+                        {/* Edit Button */}
+                        <div className="w-full flex justify-end space-x-4">
                             <button
-                                onClick={() => handleDelete(task._id)}
-                                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                                onClick={() => handleEdit(task)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md"
                             >
-                                Delete
+                                Edit
                             </button>
-                        )}
+                            {showDeleteButton && (
+                                <button
+                                    onClick={() => handleDelete(task._id)}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                                >
+                                    Delete
+                                </button>
+                            )}
+                        </div>
                     </li>
                 ))}
             </ul>
@@ -106,6 +166,82 @@ const AllTask = () => {
                 <h2 className="text-xl font-bold mb-4 text-center">Done</h2>
                 {loading ? <p className="text-center">Loading tasks...</p> : renderTasks(tasks.filter(task => task.status === 'Done'), false)}
             </div>
+
+            {/* Edit Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-lg w-1/3">
+                        <h3 className="text-xl font-bold mb-4">Edit Task</h3>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <label htmlFor="title" className="block text-sm font-medium">Title</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    value={taskForm.title}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="description" className="block text-sm font-medium">Description</label>
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    value={taskForm.description}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="category" className="block text-sm font-medium">Category</label>
+                                <select
+                                    id="category"
+                                    name="category"
+                                    value={taskForm.category}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                                    required
+                                >
+                                    <option value="To-Do">To-Do</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Done">Done</option>
+                                </select>
+                            </div>
+
+                            <div className="mb-4">
+                                <label htmlFor="deadline" className="block text-sm font-medium">Deadline</label>
+                                <input
+                                    type="date"
+                                    id="deadline"
+                                    name="deadline"
+                                    value={taskForm.deadline}
+                                    onChange={handleChange}
+                                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                                />
+                            </div>
+                            <div className="flex justify-end space-x-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="bg-gray-400 text-white px-4 py-2 rounded-md"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
